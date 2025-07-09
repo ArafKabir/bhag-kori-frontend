@@ -8,6 +8,7 @@ import {
     Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
@@ -30,10 +31,10 @@ export default function HomeScreen() {
             <View style={styles.bluePanel}>
                 <View style={styles.topActionRow}>
                     <TouchableOpacity style={styles.viewBalanceBtn}>
-                        <Text style={styles.viewBalanceText}>View Balance</Text>
+                        <Text style={styles.viewBalanceText}>Receivables</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.addMoneyBtn}>
-                        <Text style={styles.addMoneyText}>Add Money</Text>
+                    <TouchableOpacity style={styles.payablesBtn}>
+                        <Text style={styles.payablesText}>Payables</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.iconActionRow}>
@@ -46,8 +47,8 @@ export default function HomeScreen() {
                         <Image source={require('../assets/addFriend.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Add Friend</Text></TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../assets/requestPayment.png')} style={styles.icon} />
-                        <Text style={styles.iconLabel}>Request Payment</Text></TouchableOpacity>
+                        <Image source={require('../assets/request.png')} style={styles.icon} />
+                        <Text style={styles.iconLabel}>Request</Text></TouchableOpacity>
                 </View>
             </View>
 
@@ -77,9 +78,11 @@ export default function HomeScreen() {
             {/* Bottom Nav */}
             <View style={styles.bottomNav}>
                 <TouchableOpacity>
-                    <Image source={require('../assets/house.png')} style={styles.icon} />
+                    <Image source={require('../assets/House1.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Home</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.qrButton}><Text style={styles.qrIcon}>🔲</Text></TouchableOpacity>
+                <TouchableOpacity>
+                    <Image source={require('../assets/expenses.png')} style={styles.icon} />
+                    <Text style={styles.navIcon}>Add Expense</Text></TouchableOpacity>
                 <TouchableOpacity>
                     <Image source={require('../assets/chat.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Inbox</Text></TouchableOpacity>
@@ -116,6 +119,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 16,
         marginBottom: 16,
+        elevation: 10,
     },
     topActionRow: {
         flexDirection: 'row',
@@ -128,7 +132,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: 24,
     },
-    addMoneyBtn: {
+    payablesBtn: {
         borderWidth: 1,
         borderColor: '#fff',
         paddingVertical: 10,
@@ -139,7 +143,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
-    addMoneyText: {
+    payablesText: {
         color: '#fff',
         fontWeight: 'bold',
 
@@ -150,7 +154,6 @@ const styles = StyleSheet.create({
     },
     iconLabel: {
         color: 'white',
-        fontWeight: '600',
         fontSize: 14,
     },
     cardGrid: {
@@ -165,6 +168,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 12,
         padding: 12,
+        elevation: 5,
     },
     FriendsCard: {
         width: CARD_WIDTH,
@@ -173,6 +177,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 12,
         padding: 12,
+        elevation: 5,
     },
     card3: {
         width: CARD_WIDTH,
@@ -181,6 +186,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 12,
         marginTop: -40,
+        elevation: 5,
     },
     card4: {
         width: CARD_WIDTH,
@@ -189,6 +195,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 12,
         alignSelf: 'center',
+        elevation: 5,
     },
     cardTitle: {
         fontWeight: 'bold',
@@ -207,21 +214,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        padding: 12,
+        padding: 15,
         backgroundColor: '#fff',
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
         elevation: 10,
     },
     navIcon: {
-        fontSize: 15,
-    },
-    qrButton: {
-        backgroundColor: '#e6f0ff',
-        borderRadius: 32,
-        padding: 10,
-    },
-    qrIcon: {
-        fontSize: 26,
+        fontSize: 12,
     },
 });
