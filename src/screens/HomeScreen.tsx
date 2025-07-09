@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
-
+// const useNavigation = useNavigation();
 export default function HomeScreen() {
 
     return (
@@ -37,10 +37,17 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.iconActionRow}>
-                    <TouchableOpacity><Text style={styles.iconLabel}>Add Expense</Text></TouchableOpacity>
-                    <TouchableOpacity><Text style={styles.iconLabel}>Create Group</Text></TouchableOpacity>
-                    <TouchableOpacity><Text style={styles.iconLabel}>Add Friend</Text></TouchableOpacity>
-                    <TouchableOpacity><Text style={styles.iconLabel}>Request Payment</Text></TouchableOpacity>
+
+                    <TouchableOpacity>
+                        <Image source={require('../assets/createGroup.png')} style={styles.icon} />
+                        <Text style={styles.iconLabel}>Create Group</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Image source={require('../assets/addFriend.png')} style={styles.icon} />
+                        <Text style={styles.iconLabel}>Add Friend</Text></TouchableOpacity>
+                    <TouchableOpacity>
+                        <Image source={require('../assets/requestPayment.png')} style={styles.icon} />
+                        <Text style={styles.iconLabel}>Request Payment</Text></TouchableOpacity>
                 </View>
             </View>
 
@@ -48,13 +55,13 @@ export default function HomeScreen() {
             <View style={styles.cardGrid}>
                 <TouchableOpacity style={styles.GroupsCard} onPress={() => navigation.navigate('GroupsScreen')}>
                     <Text style={styles.cardTitle}>Groups</Text>
-                    <Text style={styles.cardDesc}>Create a group with your friends and split with multiple people!</Text>
+                    <Text style={styles.cardDesc}>Create a group and split with multiple people!</Text>
 
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.FriendsCard}>
                     <Text style={styles.cardTitle}>Friends</Text>
-                    <Text style={styles.cardDesc}>Add your friends and start a conversation!</Text>
+                    <Text style={styles.cardDesc}>Split with your friends!</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.card3}>
@@ -69,9 +76,13 @@ export default function HomeScreen() {
 
             {/* Bottom Nav */}
             <View style={styles.bottomNav}>
-                <TouchableOpacity><Text style={styles.navIcon}>Home</Text></TouchableOpacity>
+                <TouchableOpacity>
+                    <Image source={require('../assets/house.png')} style={styles.icon} />
+                    <Text style={styles.navIcon}>Home</Text></TouchableOpacity>
                 <TouchableOpacity style={styles.qrButton}><Text style={styles.qrIcon}>🔲</Text></TouchableOpacity>
-                <TouchableOpacity><Text style={styles.navIcon}>Inbox</Text></TouchableOpacity>
+                <TouchableOpacity>
+                    <Image source={require('../assets/chat.png')} style={styles.icon} />
+                    <Text style={styles.navIcon}>Inbox</Text></TouchableOpacity>
             </View>
         </View>
     );
@@ -90,9 +101,10 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     icon: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 30,
         resizeMode: 'contain',
+        alignSelf: 'center',
     },
     profileImg: {
         width: 32,
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     navIcon: {
-        fontSize: 22,
+        fontSize: 15,
     },
     qrButton: {
         backgroundColor: '#e6f0ff',
