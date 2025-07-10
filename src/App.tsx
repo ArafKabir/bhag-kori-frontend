@@ -7,5 +7,5 @@ import LoginScreen from "./screens/LoginScreen.tsx";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    return <LoginScreen/>
+    return <HomeScreen/>
 }
