@@ -1,42 +1,56 @@
-import React, { useContext, useState } from 'react';
-import {View, TextInput, Button, StyleSheet, Text, ImageBackground, TouchableOpacity} from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { login as loginRequest } from '../services/api';
+import React, { useState } from 'react';
+import {
+    View,
+    TextInput,
+    StyleSheet,
+    Text,
+    ImageBackground,
+    TouchableOpacity,
+    Alert,
+} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather';
+import LinearGradient from 'react-native-linear-gradient';
 
-export default function LoginScreen() {
-   // const { login } = useContext(AuthContext);
-
+export default function SignUpScreen() {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [confirmPass, setConfirmPass] = useState('');
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await loginRequest(email, password);
-            const token = response.data.token;
-            await login(token);
-        } catch (err) {
-            setError('Invalid email or password');
-            console.log('Login error:', err);
-        } finally {
-            setLoading(false);
+    const handleSignUp = () => {
+        if (!name || !email || !password || !confirmPass) {
+            Alert.alert('Error', 'Please fill in all fields');
+        } else if (password !== confirmPass) {
+            Alert.alert('Error', 'Passwords do not match');
+        } else {
+            // Handle sign up logic here
+            Alert.alert('Success', 'Account created!');
         }
     };
 
     return (
-        <ImageBackground source={require('../assets/backgorunds/login-bg.jpg')} style={styles.background}>
+        <ImageBackground
+            source={require('../assets/backgorunds/login-bg.jpg')}
+            style={styles.background}
+        >
             <View style={styles.headerContainer}>
-                <Text style ={styles.headerText}>Welcome Back!</Text>
-                <Text style ={styles.signInText}>Sign in to your account</Text>
+                <Text style={styles.headerText}>Create Account</Text>
+                <Text style={styles.signInText}>Sign up to get started</Text>
             </View>
+
             <View style={styles.inputContainer}>
                 <FontAwesome name="user" size={23} color="#9A9A9A" style={styles.icon} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Name"
+                    value={name}
+                    onChangeText={setName}
+                />
+            </View>
+
+            <View style={styles.inputContainer}>
+                <FontAwesome name="envelope" size={23} color="#9A9A9A" style={styles.icon} />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -57,15 +71,23 @@ export default function LoginScreen() {
                     onChangeText={setPassword}
                 />
             </View>
-            {/*{error && <Text style={styles.error}>{error}</Text>}*/}
-            <TouchableOpacity>
-                <Text style={styles.forgetPassText}>Forgot your Password?</Text>
-            </TouchableOpacity>
-                <View style={styles.signInBtnContainer}>
-                <Text style={styles.signIn}>Sign In</Text>
-                <TouchableOpacity>
+
+            <View style={styles.inputContainer}>
+                <FontAwesome name="lock" size={23} color="#9A9A9A" style={styles.icon} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Confirm Password"
+                    secureTextEntry
+                    value={confirmPass}
+                    onChangeText={setConfirmPass}
+                />
+            </View>
+
+            <View style={styles.signInBtnContainer}>
+                <Text style={styles.signIn}>Sign Up</Text>
+                <TouchableOpacity onPress={handleSignUp}>
                     <LinearGradient
-                        colors={["#A3CEE3", "#4FB2D6", "#2169B0"]}
+                        colors={['#A3CEE3', '#4FB2D6', '#2169B0']}
                         style={styles.linearGradient}
                     >
                         <Feather name="arrow-right" size={25} color="white" />
@@ -73,12 +95,17 @@ export default function LoginScreen() {
                 </TouchableOpacity>
             </View>
 
-            <Text style={styles.footerText}>Don't have an account?{" "}
-                <Text style={{textDecorationLine: "underline"}} onPress={() => {/* handle navigation */}}>
-                    Create
+            <Text style={styles.footerText}>
+                Already have an account?{' '}
+                <Text
+                    style={{ textDecorationLine: 'underline' }}
+                    onPress={() => {
+                        // navigate to Login
+                    }}
+                >
+                    Login
                 </Text>
             </Text>
-
         </ImageBackground>
     );
 }
@@ -90,9 +117,9 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
     },
-    headerContainer:{
+    headerContainer: {
         justifyContent: 'center',
-        marginBottom: 50,
+        marginBottom: 40,
     },
     headerText: {
         fontSize: 35,
@@ -105,7 +132,7 @@ const styles = StyleSheet.create({
     signInText: {
         fontSize: 15,
         textAlign: 'center',
-        color: '#262626'
+        color: '#262626',
     },
     inputContainer: {
         backgroundColor: 'white',
@@ -113,37 +140,25 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginHorizontal: 40,
         elevation: 10,
-        marginVertical: 12,
+        marginVertical: 10,
         alignItems: 'center',
     },
-
     input: {
         paddingLeft: 16,
         paddingVertical: 12,
         fontSize: 16,
         flex: 1,
     },
-
     icon: {
         marginLeft: 10,
         position: 'static',
         left: 16,
     },
-    error: {
-        color: 'red',
-        marginBottom: 8,
-        textAlign: 'center',
-    },
-    forgetPassText:{
-        color: '#BEBEBE',
-        textAlign: 'right',
-        width: "90%",
-        fontSize: 15,
-    },
     signInBtnContainer: {
         flexDirection: 'row',
-        marginTop: 70,
+        marginTop: 50,
         justifyContent: 'center',
+        alignItems: 'center',
     },
     signIn: {
         color: '#262626',
@@ -157,16 +172,14 @@ const styles = StyleSheet.create({
         width: 56,
         borderRadius: 17,
         alignItems: 'center',
-        justifyContent:'center',
+        justifyContent: 'center',
         marginHorizontal: 10,
     },
     footerText: {
         color: '#262626',
         textAlign: 'center',
-        width: "100%",
+        width: '100%',
         fontSize: 15,
-        marginTop: 20
+        marginTop: 25,
     },
-
-
 });
