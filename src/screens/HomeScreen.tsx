@@ -20,10 +20,10 @@ export default function HomeScreen() {
             {/* Header Row */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('NotificationScreen')}>
-                    <Image source={require('../assets/notification.png')} style={styles.icon} />
+                    <Image source={require('../assets/HomeIcons/notification.png')} style={styles.icon} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
-                    <Image source={require('../assets/profile.png')} style={styles.profileImg} />
+                    <Image source={require('../assets/HomeIcons/profile.png')} style={styles.profileImg} />
                 </TouchableOpacity>
             </View>
 
@@ -40,14 +40,14 @@ export default function HomeScreen() {
                 <View style={styles.iconActionRow}>
 
                     <TouchableOpacity>
-                        <Image source={require('../assets/createGroup.png')} style={styles.icon} />
+                        <Image source={require('../assets/HomeIcons/createGroup.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Create Group</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../assets/addFriend.png')} style={styles.icon} />
+                        <Image source={require('../assets/HomeIcons/addFriend.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Add Friend</Text></TouchableOpacity>
                     <TouchableOpacity>
-                        <Image source={require('../assets/request.png')} style={styles.icon} />
+                        <Image source={require('../assets/HomeIcons/request.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Request</Text></TouchableOpacity>
                 </View>
             </View>
@@ -78,13 +78,13 @@ export default function HomeScreen() {
             {/* Bottom Nav */}
             <View style={styles.bottomNav}>
                 <TouchableOpacity>
-                    <Image source={require('../assets/House1.png')} style={styles.icon} />
+                    <Image source={require('../assets/HomeIcons/House1.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Home</Text></TouchableOpacity>
                 <TouchableOpacity>
-                    <Image source={require('../assets/expenses.png')} style={styles.icon} />
+                    <Image source={require('../assets/HomeIcons/expenses.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Add Expense</Text></TouchableOpacity>
                 <TouchableOpacity>
-                    <Image source={require('../assets/chat.png')} style={styles.icon} />
+                    <Image source={require('../assets/HomeIcons/chat.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Inbox</Text></TouchableOpacity>
             </View>
         </View>

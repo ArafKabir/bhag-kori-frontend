@@ -33,7 +33,7 @@ export default function AppNavigator(){
 
     return (
         <NavigationContainer>
-            {token ? <AppStack/> : <AuthStack/>}
+            {token !== null ? <AppStack/> : <AuthStack/>}
         </NavigationContainer>
     );
 }
