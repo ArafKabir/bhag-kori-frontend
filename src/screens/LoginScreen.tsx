@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
-import {View, TextInput, Button, StyleSheet, Text, ImageBackground, TouchableOpacity} from 'react-native';
+import {View, TextInput, Button, StyleSheet, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
 import { AuthContext } from '../context/AuthContext';
-import { login as loginRequest } from '../services/api';
+//import {login, login as loginRequest} from '../services/api';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather';
@@ -78,6 +78,19 @@ export default function LoginScreen() {
                     Create
                 </Text>
             </Text>
+            <Text style={styles.footerText}>or continue with</Text>
+
+            <View style={styles.footerIconContainer}>
+                <TouchableOpacity style={styles.circleWrapper}>
+                    <Image source={require('../assets/LoginIcons/facebook.png')} style={styles.socialIcons} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.circleWrapper}>
+                    <Image source={require('../assets/LoginIcons/google.png')} style={styles.socialIcons} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.circleWrapper}>
+                    <Image source={require('../assets/LoginIcons/apple-logo.png')} style={styles.socialIcons} />
+                </TouchableOpacity>
+            </View>
 
         </ImageBackground>
     );
@@ -93,6 +106,7 @@ const styles = StyleSheet.create({
     headerContainer:{
         justifyContent: 'center',
         marginBottom: 50,
+        marginTop: 60
     },
     headerText: {
         fontSize: 35,
@@ -167,6 +181,31 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: 20
     },
+    footerIconContainer: {
+        marginTop: 25,
+        flexDirection: "row",
+        justifyContent: 'center',
+        gap: 20,
+    },
 
+    circleWrapper: {
+        backgroundColor: 'white',
+        borderRadius: 40,
+        padding: 10,
+        marginHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
+
+    socialIcons: {
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
+    },
 
 });
