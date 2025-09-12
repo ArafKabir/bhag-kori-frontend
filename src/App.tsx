@@ -9,5 +9,5 @@ import CreateGroupScreen from "./screens/CreateGroupScreen.tsx";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-    return <CreateGroupScreen/>
+    return <SignUpScreen/>
 }

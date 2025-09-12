@@ -61,6 +61,16 @@ export default function SignUpScreen() {
                 />
             </View>
 
+          <View style={styles.inputContainer}>
+            <FontAwesome name="phone" size={23} color="#9A9A9A" style={styles.icon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              keyboardType="numeric"
+              autoCapitalize="none"
+                          />
+          </View>
+
             <View style={styles.inputContainer}>
                 <FontAwesome name="lock" size={23} color="#9A9A9A" style={styles.icon} />
                 <TextInput
