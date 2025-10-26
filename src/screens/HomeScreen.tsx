@@ -7,13 +7,13 @@ import {
     Dimensions,
     Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import * as Animatable from 'react-native-animatable';
+
+
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
 // const useNavigation = useNavigation();
-export default function HomeScreen() {
+export default function HomeScreen({navigation}: {navigation: any} ) {
 
     return (
         <View style={styles.container}>

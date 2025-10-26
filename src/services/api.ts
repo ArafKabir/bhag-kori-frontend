@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { AuthContext } from '../context/AuthContext';
 
 const BASE_URL =
-    process.env.API_URL ?? 'http://10.0.2.2:8080/api';
+    process.env.API_URL ?? 'https://bhag-kori-web-afh8etd3d5geb0ae.canadacentral-01.azurewebsites.net';
 
 
 const api = axios.create({

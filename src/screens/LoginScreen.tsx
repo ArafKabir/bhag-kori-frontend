@@ -1,14 +1,13 @@
-import React, {  useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {View, TextInput,  StyleSheet, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
-//import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather';
 import { loginRequest } from '../services/api.ts';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function LoginScreen() {
-   // const { login } = useContext(AuthContext);
+export default function LoginScreen({navigation}: {navigation: any}) {
+   const { login } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,12 +15,16 @@ export default function LoginScreen() {
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async () => {
+        loading;
+        error;
         setLoading(true);
         setError(null);
         try {
             const response = await loginRequest(email, password);
             const token = response.data.token;
-            await AsyncStorage.setItem('token', token)
+
+            await login(token);
+            navigation.replace('Home');
         } catch (err) {
             setError('Invalid email or password');
             console.log('Login error:', err);
@@ -65,18 +68,18 @@ export default function LoginScreen() {
             </TouchableOpacity>
                 <View style={styles.signInBtnContainer}>
                 <Text style={styles.signIn}>Sign In</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleSubmit}>
                     <LinearGradient
                         colors={["#A3CEE3", "#4FB2D6", "#2169B0"]}
                         style={styles.linearGradient}
                     >
-                        <Feather name="arrow-right" size={25} color="white" onPress={handleSubmit} />
+                        <Feather name="arrow-right" size={25} color="white"  />
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
 
             <Text style={styles.footerText}>Don't have an account?{" "}
-                <Text style={{textDecorationLine: "underline"}} onPress={() => {/* handle navigation */}}>
+                <Text style={{textDecorationLine: "underline"}} onPress={() => {navigation.replace('SignUp')}}>
                     Create
                 </Text>
             </Text>

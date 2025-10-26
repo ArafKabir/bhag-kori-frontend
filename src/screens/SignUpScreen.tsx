@@ -58,7 +58,7 @@ export default function SignUpScreen({navigation}: {navigation: any}) {
 
     return (
         <ImageBackground
-            source={require('../assets/backgorunds/login-bg.jpg')}
+            source={require('../assets/backgorunds/login-bg.png')}
             style={styles.background}
         >
             <View style={styles.headerContainer}>
@@ -138,7 +138,7 @@ export default function SignUpScreen({navigation}: {navigation: any}) {
                 <Text
                     style={{ textDecorationLine: 'underline' }}
                     onPress={() => {
-                        // navigate to Login
+                        navigation.replace('Login');
                     }}
                 >
                     Login
