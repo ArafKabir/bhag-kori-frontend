@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react';
-import {View, TextInput, Button, StyleSheet, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-//import {login, login as loginRequest} from '../services/api';
+import React, {  useState } from 'react';
+import {View, TextInput,  StyleSheet, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
+//import { AuthContext } from '../context/AuthContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather';
+import { loginRequest } from '../services/api.ts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
    // const { login } = useContext(AuthContext);
@@ -20,7 +21,7 @@ export default function LoginScreen() {
         try {
             const response = await loginRequest(email, password);
             const token = response.data.token;
-            await login(token);
+            await AsyncStorage.setItem('token', token)
         } catch (err) {
             setError('Invalid email or password');
             console.log('Login error:', err);
@@ -30,8 +31,9 @@ export default function LoginScreen() {
     };
 
     return (
-        <ImageBackground source={require('../assets/backgorunds/login-bg.jpg')} style={styles.background}>
+        <ImageBackground source={require('../assets/backgorunds/login-bg.png')} style={styles.background}>
             <View style={styles.headerContainer}>
+                <Image source={require('../assets/AppLogo/logo.png')} style={styles.logo}/>
                 <Text style ={styles.headerText}>Welcome Back!</Text>
                 <Text style ={styles.signInText}>Sign in to your account</Text>
             </View>
@@ -68,7 +70,7 @@ export default function LoginScreen() {
                         colors={["#A3CEE3", "#4FB2D6", "#2169B0"]}
                         style={styles.linearGradient}
                     >
-                        <Feather name="arrow-right" size={25} color="white" />
+                        <Feather name="arrow-right" size={25} color="white" onPress={handleSubmit} />
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
@@ -102,6 +104,13 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         justifyContent: 'center',
+    },
+    logo: {
+      width: 240,
+      height: 240,
+      alignSelf: 'center',
+      marginTop: -80,
+      resizeMode: 'contain'
     },
     headerContainer:{
         justifyContent: 'center',

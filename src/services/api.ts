@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext } from '../context/AuthContext';
+// import { AuthContext } from '../context/AuthContext';
 
 const BASE_URL =
-    process.env.API_URL ?? 'http://10.0.2.2:8081/api';
+    process.env.API_URL ?? 'http://10.0.2.2:8080/api';
 
 
 const api = axios.create({
@@ -24,7 +24,7 @@ api.interceptors.response.use(
     res => res,
     async (err: AxiosError) => {
         if (err.response?.status === 401) {
-            // clear token & redirect to login
+            // clear token and redirect to login
             await AsyncStorage.removeItem('token');
             // You can also expose logout via AuthContext:
             // AuthContext.dispatch({ type: 'LOGOUT' });
@@ -34,11 +34,11 @@ api.interceptors.response.use(
 );
 
 
-export const login = (email: string, password: string) =>
-    api.post<{ token: string }>('/auth/login', { email, password });
+export const loginRequest = (email: string, password: string) =>
+    api.post<{ token: string }>('/login', { email, password });
 
-export const register = (email: string, password: string) =>
-    api.post('/auth/register', { email, password });
+export const signUp = (email: string, phone: string, name: string, password: string ) =>
+    api.post('/create', { email, phone, name, password });
 
 export const fetchFriends = () =>
     api.get<Friend[]>('/friends').then(r => r.data);

@@ -11,23 +11,50 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+import { signUp } from '../services/api.ts';
 
-export default function SignUpScreen() {
+export default function SignUpScreen({navigation}: {navigation: any}) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
 
-    const handleSignUp = () => {
-        if (!name || !email || !password || !confirmPass) {
-            Alert.alert('Error', 'Please fill in all fields');
-        } else if (password !== confirmPass) {
-            Alert.alert('Error', 'Passwords do not match');
-        } else {
-            // Handle sign up logic here
-            Alert.alert('Success', 'Account created!');
-        }
-    };
+  const handleSignUp = async () => {
+    if (!name || !email || !password || !confirmPass) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPass) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await signUp(email, phone, name, password);
+
+      console.log('Signup successful:', response.data);
+
+      // if (response.data.token) {
+      //   await AsyncStorage.setItem('token', response.data.token);
+      // }
+
+      Alert.alert('Success', 'Account created successfully!');
+      navigation.goBack(); // goes back to login screen after successful account creation
+
+    } catch (err) {
+      console.log('Signup error:', err);
+
+      if (axios.isAxiosError(err)) {
+        const msg = err.response?.data?.message || 'Failed to create account';
+        Alert.alert('Error', msg);
+      } else {
+        Alert.alert('Error', 'Something went wrong');
+      }
+    }
+  };
 
     return (
         <ImageBackground
@@ -68,7 +95,8 @@ export default function SignUpScreen() {
               placeholder="Phone Number"
               keyboardType="numeric"
               autoCapitalize="none"
-                          />
+              onChangeText={setPhone}
+            />
           </View>
 
             <View style={styles.inputContainer}>
