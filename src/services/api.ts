@@ -53,6 +53,13 @@ export const fetchUserBalanceByGroup = async (groupId: number, userId: number) =
   return response.data;
 }
 
+export const createGroup = async (name: string, description: string, creatorId: number) => {
+  const response = await api.post('room/create', { name, description, creatorId });
+  return response.data;
+}
+
+export const createGroupWithMembers = async (name: string, description: string, creatorId: number, memberIds) => {}
+
 /* Types */
 export interface Friend {
     id: number;

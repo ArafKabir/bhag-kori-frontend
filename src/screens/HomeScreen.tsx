@@ -18,21 +18,42 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
     const {user, logout} = React.useContext(AuthContext);
     return (
         <View style={styles.container}>
+
             {/* Header Row */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                    <Image source={require('../assets/HomeIcons/notification.png')} style={styles.icon} />
+          <View>
+            <LinearGradient
+              colors={['#201A47', '#40407A', '#19A1BD']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.header}
+            >
+              <View style={styles.headerRow}>
+                {/* Notification Icon - Left */}
+                <TouchableOpacity onPress={() => console.log('Menu')}>
+                  <Image
+                    source={require('../assets/HomeIcons/menu.png')}
+                    style={styles.headerIcon}
+                  />
                 </TouchableOpacity>
-                <Text>{user?.name}</Text>
+
+                {/* Center - Username */}
+                <Text style={styles.headerName}>{user?.name || 'User'}</Text>
+
+                {/* Profile Icon - Right */}
                 <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
-                    <Image source={require('../assets/HomeIcons/profile.png')} style={styles.profileImg} />
+                  <Image
+                    source={require('../assets/HomeIcons/profile.png')}
+                    style={styles.headerProfile}
+                  />
                 </TouchableOpacity>
-            </View>
+              </View>
+            </LinearGradient>
+          </View>
 
             {/* Action Panel */}
             <View style={styles.bluePanel}>
               <LinearGradient
-                colors={['#973ecf', '#6b1fb0']}
+                colors={['#201A47','#40407A', '#19A1BD']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.bluePanel}
@@ -47,14 +68,14 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
                 </View>
                 <View style={styles.iconActionRow}>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('CreateGroup')}>
                         <Image source={require('../assets/HomeIcons/createGroup.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Create Group</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('AddFriend')}>
                         <Image source={require('../assets/HomeIcons/addFriend.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Add Friend</Text></TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Request')}>
                         <Image source={require('../assets/HomeIcons/request.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Request</Text></TouchableOpacity>
                 </View>
@@ -63,61 +84,104 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
 
             {/* Dynamic Cards */}
             <View style={styles.cardGrid}>
-                <TouchableOpacity style={styles.GroupsCard} onPress={() => navigation.navigate('Groups')}>
+                <TouchableOpacity  onPress={() => navigation.navigate('Groups')}>
+                  <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.GroupsCard}>
                     <Text style={styles.cardTitle}>Groups</Text>
                     <Text style={styles.cardDesc}>Create a group and split with multiple people!</Text>
-
+                </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.FriendsCard}>
+                <TouchableOpacity >
+                  <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.FriendsCard}>
                     <Text style={styles.cardTitle}>Friends</Text>
                     <Text style={styles.cardDesc}>Split with your friends!</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.card3}>
+                <TouchableOpacity >
+                  <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.card3}>
                     <Text style={styles.cardTitle}>Activity Log</Text>
                     <Text style={styles.cardDesc}>Check all your recent activities</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.card4}>
+                <TouchableOpacity >
+                  <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.card4}>
                     <Text style={styles.cardTitle}>Pay Up</Text>
                     <Text style={styles.cardDesc}>Pay all your debts with one click!</Text>
+                  </LinearGradient>
                 </TouchableOpacity>
             </View>
 
             {/* Bottom Nav */}
-            <View style={styles.bottomNav}>
+
+              <LinearGradient
+                colors={['#201A47', '#40407A', '#19A1BD']} style = {styles.bottomNav}>
                 <TouchableOpacity>
-                    <Image source={require('../assets/HomeIcons/House1.png')} style={styles.icon} />
-                    <Text style={styles.navIcon}>Home</Text></TouchableOpacity>
+                    <Image source={require('../assets/HomeIcons/home.png')} style={styles.icon} />
+                    <Text style={styles.navIcon}> Home</Text></TouchableOpacity>
                 <TouchableOpacity>
-                    <Image source={require('../assets/HomeIcons/expenses.png')} style={styles.icon} />
+                    <Image source={require('../assets/HomeIcons/wallet.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Add Expense</Text></TouchableOpacity>
                 <TouchableOpacity>
-                    <Image source={require('../assets/HomeIcons/chat.png')} style={styles.icon} />
-                    <Text style={styles.navIcon}>Inbox</Text></TouchableOpacity>
-            </View>
-        </View>
+                    <Image source={require('../assets/HomeIcons/inbox.png')} style={styles.icon} />
+                    <Text style={styles.navIcon}>  Inbox</Text></TouchableOpacity>
+              </LinearGradient>
+          </View>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#290142',
+        backgroundColor: '#090933',
         padding: 12,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
+      width: '100%',
+      borderRadius: 20,
+      paddingVertical: 15,
+      marginTop: 30,
+      paddingHorizontal: 20,
+      elevation: 10,
+
     },
+
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+
+    headerIcon: {
+      width: 28,
+      height: 28,
+      resizeMode: 'contain',
+    },
+
+    headerProfile: {
+      width: 28,
+      height: 28,
+      borderRadius: 18,
+      borderWidth: 2,
+      borderColor: '#fff',
+    },
+
+    headerName: {
+      fontSize: 18,
+      color: '#fff',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      flex: 1,
+      marginHorizontal: 10,
+    },
+
     icon: {
-        width: 30,
-        height: 30,
-        resizeMode: 'contain',
-        alignSelf: 'center',
-    },
+          width: 30,
+          height: 30,
+          resizeMode: 'contain',
+          alignSelf: 'center',
+      },
     profileImg: {
         width: 32,
         height: 32,
@@ -136,7 +200,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     viewBalanceBtn: {
-        backgroundColor: '#4c0e75',
+        backgroundColor: '#0D0D4A',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 24,
@@ -226,11 +290,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 15,
         backgroundColor: '#fff',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        elevation: 10,
     },
     navIcon: {
-        fontSize: 12,
+      fontSize: 12,
+      color: '#f2f0f0',
+      fontWeight: 'bold',
     },
 });
