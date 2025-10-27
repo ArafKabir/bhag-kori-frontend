@@ -1,5 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity, Image, Alert } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Animated,
+} from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
@@ -65,14 +75,60 @@ export default function LoginScreen({navigation}: {navigation: any}) {
           }
         }
       };
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  useEffect(() => {
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0.8,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.9,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
 
     return (
-        <ImageBackground source={require('../assets/backgorunds/login-bg.png')} style={styles.background}>
+
+      <LinearGradient
+        colors={['#201A47', '#40407A', '#19A1BD']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.background}
+      >
+        <Animated.View
+          style={[
+            styles.centerBox,
+            {
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+        >
             <View style={styles.headerContainer}>
                 <Image source={require('../assets/AppLogo/logo.png')} style={styles.logo}/>
                 <Text style ={styles.headerText}>Welcome Back!</Text>
                 <Text style ={styles.signInText}>Sign in to your account</Text>
             </View>
+        </Animated.View>
             <View style={styles.inputContainer}>
                 <FontAwesome name="user" size={23} color="#f2f0f0" style={styles.icon} />
                 <TextInput
@@ -129,12 +185,16 @@ export default function LoginScreen({navigation}: {navigation: any}) {
                     <Image source={require('../assets/LoginIcons/apple-logo.png')} style={styles.socialIcons} />
                 </TouchableOpacity>
             </View>
-
-        </ImageBackground>
+          </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
+  centerBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
     background: {
         flex: 1,
         width: '100%',

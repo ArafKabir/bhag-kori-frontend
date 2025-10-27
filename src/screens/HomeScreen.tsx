@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    Dimensions,
-    Image,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Image, Animated,
 } from 'react-native';
 import {AuthContext} from '../context/AuthContext.tsx';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,6 +16,36 @@ const CARD_WIDTH = (width - 40) / 2;
 // const useNavigation = useNavigation();
 export default function HomeScreen({navigation}: {navigation: any} ) {
     const {user, logout} = React.useContext(AuthContext);
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(0.8)).current;
+    useEffect(() => {
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }, [fadeAnim, scaleAnim]);
     return (
         <View style={styles.container}>
 
@@ -49,7 +79,15 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
               </View>
             </LinearGradient>
           </View>
-
+          <Animated.View
+            style={[
+              styles.centerBox,
+              {
+                opacity: fadeAnim,
+                transform: [{ scale: scaleAnim }],
+              },
+            ]}
+          >
             {/* Action Panel */}
             <View style={styles.bluePanel}>
               <LinearGradient
@@ -111,15 +149,15 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
                   </LinearGradient>
                 </TouchableOpacity>
             </View>
-
+            </Animated.View>
             {/* Bottom Nav */}
 
               <LinearGradient
                 colors={['#201A47', '#40407A', '#19A1BD']} style = {styles.bottomNav}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                     <Image source={require('../assets/HomeIcons/home.png')} style={styles.icon} />
                     <Text style={styles.navIcon}> Home</Text></TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('AddExpense')}>
                     <Image source={require('../assets/HomeIcons/wallet.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Add Expense</Text></TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
@@ -132,6 +170,9 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
 }
 
 const styles = StyleSheet.create({
+  centerBox: {
+
+  },
     container: {
         flex: 1,
         backgroundColor: '#090933',
