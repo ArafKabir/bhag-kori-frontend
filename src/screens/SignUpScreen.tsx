@@ -42,7 +42,7 @@ export default function SignUpScreen({navigation}: {navigation: any}) {
       // }
 
       Alert.alert('Success', 'Account created successfully!');
-      navigation.goBack(); // goes back to login screen after successful account creation
+      navigation.navigate('Login'); // goes back to login screen after successful account creation
 
     } catch (err) {
       console.log('Signup error:', err);

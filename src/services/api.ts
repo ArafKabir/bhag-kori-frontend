@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { AuthContext } from '../context/AuthContext';
 
 const BASE_URL =
-    process.env.API_URL ?? 'https://bhag-kori-web-afh8etd3d5geb0ae.canadacentral-01.azurewebsites.net';
+    process.env.API_URL ?? 'https://bhag-kori-web-afh8etd3d5geb0ae.canadacentral-01.azurewebsites.net/api/v1/';
 
 
 const api = axios.create({
@@ -35,16 +35,23 @@ api.interceptors.response.use(
 
 
 export const loginRequest = (email: string, password: string) =>
-    api.post<{ token: string }>('/login', { email, password });
+    api.post('user/login', { email, password });
 
 export const signUp = (email: string, phone: string, name: string, password: string ) =>
-    api.post('/create', { email, phone, name, password });
+    api.post('user/create', { email, phone, name, password });
 
 export const fetchFriends = () =>
     api.get<Friend[]>('/friends').then(r => r.data);
 
-export const fetchGroups = () =>
-    api.get<Group[]>('/groups').then(r => r.data);
+export const fetchGroupsByUser = async (userId: number) => {
+  const response = await api.get(`room/get/user/${userId}`);
+  return response.data;
+};
+
+export const fetchUserBalanceByGroup = async (groupId: number, userId: number) => {
+  const response = await api.get(`room/get/${groupId}/total/user/${userId}`);
+  return response.data;
+}
 
 /* Types */
 export interface Friend {
@@ -56,7 +63,10 @@ export interface Friend {
 export interface Group {
     id: number;
     name: string;
-    balance: number;
+    description: string;
+    createTime: string; // LocalDateTime is returned as an ISO string in JSON
+    creatorId: number;
+    memberIds: number[];
 }
 
 export default api;

@@ -7,21 +7,23 @@ import {
     Dimensions,
     Image,
 } from 'react-native';
-
+import {AuthContext} from '../context/AuthContext.tsx';
+import LinearGradient from 'react-native-linear-gradient';
 
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
 // const useNavigation = useNavigation();
 export default function HomeScreen({navigation}: {navigation: any} ) {
-
+    const {user, logout} = React.useContext(AuthContext);
     return (
         <View style={styles.container}>
             {/* Header Row */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('NotificationScreen')}>
+                <TouchableOpacity onPress={() => navigation.replace('Login')}>
                     <Image source={require('../assets/HomeIcons/notification.png')} style={styles.icon} />
                 </TouchableOpacity>
+                <Text>{user?.name}</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
                     <Image source={require('../assets/HomeIcons/profile.png')} style={styles.profileImg} />
                 </TouchableOpacity>
@@ -29,6 +31,12 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
 
             {/* Action Panel */}
             <View style={styles.bluePanel}>
+              <LinearGradient
+                colors={['#973ecf', '#6b1fb0']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.bluePanel}
+              >
                 <View style={styles.topActionRow}>
                     <TouchableOpacity style={styles.viewBalanceBtn}>
                         <Text style={styles.viewBalanceText}>Receivables</Text>
@@ -50,11 +58,12 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
                         <Image source={require('../assets/HomeIcons/request.png')} style={styles.icon} />
                         <Text style={styles.iconLabel}>Request</Text></TouchableOpacity>
                 </View>
+                </LinearGradient>
             </View>
 
             {/* Dynamic Cards */}
             <View style={styles.cardGrid}>
-                <TouchableOpacity style={styles.GroupsCard} onPress={() => navigation.navigate('GroupsScreen')}>
+                <TouchableOpacity style={styles.GroupsCard} onPress={() => navigation.navigate('Groups')}>
                     <Text style={styles.cardTitle}>Groups</Text>
                     <Text style={styles.cardDesc}>Create a group and split with multiple people!</Text>
 
@@ -94,7 +103,7 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ecfafa',
+        backgroundColor: '#290142',
         padding: 12,
     },
     header: {
@@ -115,11 +124,11 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     bluePanel: {
-        backgroundColor: '#007bff',
-        borderRadius: 16,
-        padding: 16,
-        marginBottom: 16,
-        elevation: 10,
+      width: 350,
+      borderRadius: 30,
+      padding: 20,
+      elevation: 50,
+      alignSelf: 'center'
     },
     topActionRow: {
         flexDirection: 'row',
@@ -127,7 +136,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     viewBalanceBtn: {
-        backgroundColor: '#004fc1',
+        backgroundColor: '#4c0e75',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 24,
@@ -164,7 +173,7 @@ const styles = StyleSheet.create({
     GroupsCard: {
         width: CARD_WIDTH,
         height: 120,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(167, 23, 189,0.6)',
         borderRadius: 12,
         marginBottom: 12,
         padding: 12,
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
     FriendsCard: {
         width: CARD_WIDTH,
         height: 160,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(167, 23, 189,0.6)',
         borderRadius: 12,
         marginBottom: 12,
         padding: 12,
@@ -182,7 +191,7 @@ const styles = StyleSheet.create({
     card3: {
         width: CARD_WIDTH,
         height: 100,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(167, 23, 189,0.6)',
         borderRadius: 12,
         padding: 12,
         marginTop: -40,
@@ -191,7 +200,7 @@ const styles = StyleSheet.create({
     card4: {
         width: CARD_WIDTH,
         height: 180,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(167, 23, 189,0.6)',
         borderRadius: 12,
         padding: 12,
         alignSelf: 'center',
@@ -199,11 +208,12 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontWeight: 'bold',
+        color: '#fff',
         fontSize: 16,
         marginBottom: 4,
     },
     cardDesc: {
-        color: '#666',
+        color: '#f2f0f0',
         fontSize: 12,
     },
     bottomNav: {

@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
-import {View, TextInput,  StyleSheet, Text, ImageBackground, TouchableOpacity, Image} from 'react-native';
+import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity, Image, Alert } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
 import Feather from 'react-native-vector-icons/Feather';
 import { loginRequest } from '../services/api.ts';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 export default function LoginScreen({navigation}: {navigation: any}) {
    const { login } = useContext(AuthContext);
@@ -21,10 +23,14 @@ export default function LoginScreen({navigation}: {navigation: any}) {
         setError(null);
         try {
             const response = await loginRequest(email, password);
-            const token = response.data.token;
+            const user = response.data;
+            if(!user){
+              throw new Error('No user found');
+            }
+            const token = 'dummy-token';
 
-            await login(token);
-            navigation.replace('Home');
+            await login(user, token);
+            navigation.navigate('Home');
         } catch (err) {
             setError('Invalid email or password');
             console.log('Login error:', err);
@@ -32,6 +38,33 @@ export default function LoginScreen({navigation}: {navigation: any}) {
             setLoading(false);
         }
     };
+
+    const handleGoogleSignin = async () => {
+        try {
+          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+          const userInfo = await GoogleSignin.signIn();
+
+          console.log('Google User Info:', userInfo);
+
+          // If your backend supports Google auth, send userInfo.idToken to it
+          // const token = userInfo.idToken;
+          // await loginWithGoogle(token);
+
+          // Otherwise, store locally for now
+          //await AsyncStorage.setItem('user', JSON.stringify(user));
+
+          //Alert.alert('Success', `Logged in as ${userInfo.user.name}`);
+
+        } catch (error: any) {
+          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            console.log('User cancelled sign in');
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            console.log('Sign in in progress');
+          } else {
+            console.error('Google Sign-In Error:', error);
+          }
+        }
+      };
 
     return (
         <ImageBackground source={require('../assets/backgorunds/login-bg.png')} style={styles.background}>
@@ -41,7 +74,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
                 <Text style ={styles.signInText}>Sign in to your account</Text>
             </View>
             <View style={styles.inputContainer}>
-                <FontAwesome name="user" size={23} color="#9A9A9A" style={styles.icon} />
+                <FontAwesome name="user" size={23} color="#f2f0f0" style={styles.icon} />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -53,7 +86,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
             </View>
 
             <View style={styles.inputContainer}>
-                <FontAwesome name="lock" size={23} color="#9A9A9A" style={styles.icon} />
+                <FontAwesome name="lock" size={23} color="#f2f0f0" style={styles.icon} />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
@@ -73,7 +106,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
                         colors={["#A3CEE3", "#4FB2D6", "#2169B0"]}
                         style={styles.linearGradient}
                     >
-                        <Feather name="arrow-right" size={25} color="white"  />
+                        <Feather name="arrow-right" size={25} color="#f2f0f0"  />
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
@@ -89,7 +122,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
                 <TouchableOpacity style={styles.circleWrapper}>
                     <Image source={require('../assets/LoginIcons/facebook.png')} style={styles.socialIcons} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.circleWrapper}>
+                <TouchableOpacity style={styles.circleWrapper} onPress={handleGoogleSignin}>
                     <Image source={require('../assets/LoginIcons/google.png')} style={styles.socialIcons} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.circleWrapper}>
@@ -109,8 +142,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     logo: {
-      width: 240,
-      height: 240,
+      width: 150,
+      height: 150,
       alignSelf: 'center',
       marginTop: -80,
       resizeMode: 'contain'
@@ -125,16 +158,16 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif-light',
         textAlign: 'center',
         fontWeight: 'bold',
-        color: '#262626',
+        color: '#f2f0f0',
         position: 'relative',
     },
     signInText: {
         fontSize: 15,
         textAlign: 'center',
-        color: '#262626'
+        color: '#d0b9f0'
     },
     inputContainer: {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(66, 7, 117,0.2)',
         flexDirection: 'row',
         borderRadius: 20,
         marginHorizontal: 40,
@@ -148,6 +181,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         fontSize: 16,
         flex: 1,
+        color:'white'
     },
 
     icon: {
@@ -172,7 +206,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     signIn: {
-        color: '#262626',
+        color: '#f2f0f0',
         fontSize: 23,
         fontWeight: 'bold',
         fontFamily: 'sans-serif-light',
@@ -187,7 +221,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     footerText: {
-        color: '#262626',
+        color: '#e6daf7',
         textAlign: 'center',
         width: "100%",
         fontSize: 15,
