@@ -53,12 +53,45 @@ export const fetchUserBalanceByGroup = async (groupId: number, userId: number) =
   return response.data;
 }
 
-export const createGroup = async (name: string, description: string, creatorId: number) => {
-  const response = await api.post('room/create', { name, description, creatorId });
-  return response.data;
-}
+export const createGroup = async (
+  name: string,
+  description: string,
+  creatorId: number
+) => {
+  const newGroup = {
+    id: null,
+    name,
+    description,
+    createTime: new Date().toISOString(),
+    creatorId,
+    memberIds: [],
+  };
 
-export const createGroupWithMembers = async (name: string, description: string, creatorId: number, memberIds) => {}
+  const response = await api.post('room/create', newGroup);
+  return response.data;
+};
+
+export const createGroupWithMembers = async (
+  name: string,
+  description: string,
+  creatorId: number,
+  emails: string[]
+) => {
+  const newGroup = {
+    roomDto: {
+      id: null,
+      name,
+      description,
+      createTime: new Date().toISOString(),
+      creatorId,
+      memberIds: [],
+    },
+    emails,
+  };
+
+  const response = await api.post('room/create/new', newGroup);
+  return response.data;
+};
 
 /* Types */
 export interface Friend {
@@ -67,13 +100,5 @@ export interface Friend {
     avatarUrl: string;
 }
 
-export interface Group {
-    id: number;
-    name: string;
-    description: string;
-    createTime: string; // LocalDateTime is returned as an ISO string in JSON
-    creatorId: number;
-    memberIds: number[];
-}
 
 export default api;
