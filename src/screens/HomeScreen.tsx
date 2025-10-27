@@ -91,20 +91,20 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
                 </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity >
+                <TouchableOpacity onPress={() => navigation.navigate('Friends')} >
                   <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.FriendsCard}>
                     <Text style={styles.cardTitle}>Friends</Text>
                     <Text style={styles.cardDesc}>Split with your friends!</Text>
                   </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity >
+                <TouchableOpacity onPress={() => navigation.navigate('ActivityLog')}>
                   <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.card3}>
                     <Text style={styles.cardTitle}>Activity Log</Text>
                     <Text style={styles.cardDesc}>Check all your recent activities</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-                <TouchableOpacity >
+                <TouchableOpacity onPress={() => navigation.navigate('PayUp')}>
                   <LinearGradient colors={['#201A47','#40407A', '#19A1BD']} style={styles.card4}>
                     <Text style={styles.cardTitle}>Pay Up</Text>
                     <Text style={styles.cardDesc}>Pay all your debts with one click!</Text>
@@ -122,7 +122,7 @@ export default function HomeScreen({navigation}: {navigation: any} ) {
                 <TouchableOpacity>
                     <Image source={require('../assets/HomeIcons/wallet.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>Add Expense</Text></TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Inbox')}>
                     <Image source={require('../assets/HomeIcons/inbox.png')} style={styles.icon} />
                     <Text style={styles.navIcon}>  Inbox</Text></TouchableOpacity>
               </LinearGradient>

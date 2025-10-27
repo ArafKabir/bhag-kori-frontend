@@ -100,5 +100,14 @@ export interface Friend {
     avatarUrl: string;
 }
 
+export interface Group {
+    id: number;
+    name: string;
+    description: string;
+    createTime: string;
+    creatorId: number;
+    memberIds: number[];
+}
+
 
 export default api;
