@@ -1,20 +1,92 @@
-import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Group } from '../services/api.ts';
-import GroupBottomPopUp from '../components/GroupBottomUp'; // ✅ default import
+import { AuthContext } from '../context/AuthContext';
+import { Expense, fetchAllExpensesByGroupId, Group } from '../services/api';
+import GroupBottomPopUp from '../components/GroupBottomUp';
+import ExpensePopUp from '../components/ExpensePopUp';
 
-export default function GroupDetails({ route, navigation }: { route: any; navigation: any }) {
+export default function GroupDetails({
+                                       route,
+                                       navigation,
+                                     }: {
+  route: any;
+  navigation: any;
+}) {
   const { group } = route.params as { group: Group };
+  const { user } = useContext(AuthContext);
+
+  const [expenseList, setExpenseList] = useState<Expense[]>([]);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [bottomUpVisible, setBottomUpVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // 🧹 Fetch expenses
+  const fetchAllExpenses = async (groupId: number) => {
+    try {
+      const data = await fetchAllExpensesByGroupId(groupId);
+      console.log('Expenses:', data);
+
+      // Normalize response in case backend uses snake_case
+      const normalized = (data || []).map((e: any) => ({
+        id: e.id,
+        name: e.name,
+        createTime: e.createTime || e.create_time,
+        payerId: e.payerId || e.payer_id,
+        roomId: e.roomId || e.room_id,
+        amount: Number(e.amount),
+        splitType: e.splitType || e.split_type,
+      }));
+
+      setExpenseList(normalized);
+    } catch (error: any) {
+      console.error(
+        'Error fetching expenses:',
+        error.response?.data || error.message || error
+      );
+      setExpenseList([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔁 Run once on load
+  useEffect(() => {
+    if (group?.id && user?.id) {
+      fetchAllExpenses(group.id);
+    }
+  }, [group, user?.id]);
 
   const handleDelete = async () => {
     console.log('Deleting group:', group.name);
   };
 
+  // 💬 When user taps an expense
+  const openExpenseDetails = (expense: Expense) => {
+    setSelectedExpense(expense);
+    setPopupVisible(true);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#19A1BD" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.screen}>
-      {/* Header */}
+      {/* 🟣 Header */}
       <LinearGradient
         colors={['#201A47', '#40407A', '#19A1BD']}
         start={{ x: 0, y: 0 }}
@@ -34,7 +106,7 @@ export default function GroupDetails({ route, navigation }: { route: any; naviga
           <Text style={styles.headerTitle}>{group?.name || 'Group'}</Text>
 
           {/* Menu Button */}
-          <TouchableOpacity onPress={() => setPopupVisible(true)}>
+          <TouchableOpacity onPress={() => setBottomUpVisible(true)}>
             <Image
               source={require('../assets/HomeIcons/menu.png')}
               style={styles.iconSmall}
@@ -43,39 +115,94 @@ export default function GroupDetails({ route, navigation }: { route: any; naviga
         </View>
       </LinearGradient>
 
-      {/* Scroll Content */}
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.groupText}>Description: {group?.description}</Text>
-        <Text style={styles.groupText}>Members: {group?.memberIds?.length}</Text>
-      </ScrollView>
+      {/* 🟢 Activity Section */}
+      <LinearGradient
+        colors={['#201A47', '#40407A', '#19A1BD']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.activityBox}
+      >
+        <Text style={styles.activityTitle}>Activity</Text>
 
-      {/* Bottom Nav */}
+        <ScrollView contentContainerStyle={styles.activityScroll}>
+          {Array.isArray(expenseList) && expenseList.length > 0 ? (
+            expenseList.map((expense) => (
+              <TouchableOpacity
+                key={expense.id}
+                style={styles.expenseCard}
+                onPress={() => openExpenseDetails(expense)}
+              >
+                <View style={styles.expenseInfo}>
+                  <Text style={styles.expenseTitle}>{expense.name}</Text>
+                  <Text style={styles.expenseDate}>
+                    {new Date(expense.createTime).toLocaleString()}
+                  </Text>
+                </View>
+
+                <View style={styles.amountBadge}>
+                  <Text style={styles.amountText}>
+                    Amount: ${expense.amount.toFixed(2)}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.noExpense}>No expenses yet.</Text>
+          )}
+        </ScrollView>
+      </LinearGradient>
+
+      {/* ⚫ Bottom Navigation */}
       <LinearGradient
         colors={['#201A47', '#40407A', '#19A1BD']}
         style={styles.bottomNav}
       >
-        <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.navItem}>
-          <Image source={require('../assets/HomeIcons/home.png')} style={styles.icon} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Home')}
+          style={styles.navItem}
+        >
+          <Image
+            source={require('../assets/HomeIcons/home.png')}
+            style={styles.icon}
+          />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('AddExpense')} style={styles.navItem}>
-          <Image source={require('../assets/HomeIcons/wallet.png')} style={styles.icon} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('AddExpense', { group })}
+          style={styles.navItem}
+        >
+          <Image
+            source={require('../assets/HomeIcons/wallet.png')}
+            style={styles.icon}
+          />
           <Text style={styles.navText}>Add Expense</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Inbox')} style={styles.navItem}>
-          <Image source={require('../assets/Group/AddMember.png')} style={styles.icon} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Inbox')}
+          style={styles.navItem}
+        >
+          <Image
+            source={require('../assets/Group/AddMember.png')}
+            style={styles.icon}
+          />
           <Text style={styles.navText}>Add Member</Text>
         </TouchableOpacity>
       </LinearGradient>
 
-      {/* Popup Component */}
+      {/* 🟡 Bottom PopUps */}
       <GroupBottomPopUp
-        visible={popupVisible}
-        onClose={() => setPopupVisible(false)}
+        visible={bottomUpVisible}
+        onClose={() => setBottomUpVisible(false)}
         group={group}
         onDelete={handleDelete}
+      />
+
+      <ExpensePopUp
+        visible={popupVisible}
+        onClose={() => setPopupVisible(false)}
+        expense={selectedExpense}
       />
     </View>
   );
@@ -110,15 +237,59 @@ const styles = StyleSheet.create({
     height: 28,
     tintColor: '#fff',
   },
-  scrollContainer: {
-    flexGrow: 1,
-    padding: 20,
-    paddingBottom: 100,
+  activityBox: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 15,
+    marginTop: 15,
+    elevation: 8,
   },
-  groupText: {
-    color: '#fff',
+  activityTitle: {
+    color: '#cfc5ff',
     fontSize: 16,
+    fontWeight: 'bold',
     marginBottom: 10,
+  },
+  activityScroll: {
+    paddingBottom: 20,
+  },
+  expenseCard: {
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  expenseInfo: {
+    marginBottom: 6,
+  },
+  expenseTitle: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  expenseDate: {
+    color: '#bbb',
+    fontSize: 12,
+  },
+  amountBadge: {
+    backgroundColor: 'rgba(0,255,100,0.2)',
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginTop: 6,
+  },
+  amountText: {
+    color: '#00FF88',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  noExpense: {
+    color: '#aaa',
+    textAlign: 'center',
+    marginTop: 15,
   },
   bottomNav: {
     position: 'absolute',
@@ -144,5 +315,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     marginTop: 3,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

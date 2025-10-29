@@ -93,6 +93,11 @@ export const createGroupWithMembers = async (
   return response.data;
 };
 
+export const fetchAllExpensesByGroupId = async (groupId: number) => {
+  const response = await api.get(`expense/get/room/${groupId}`)
+  return response.data;
+}
+
 /* Types */
 export interface Friend {
     id: number;
