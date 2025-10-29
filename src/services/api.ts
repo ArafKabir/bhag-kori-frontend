@@ -109,5 +109,14 @@ export interface Group {
     memberIds: number[];
 }
 
+export interface Expense {
+  id: number;
+  name: string;
+  createTime: string,
+  payerId: number,
+  roomId: number,
+  amount: number,
+  splitType: string
+}
 
 export default api;

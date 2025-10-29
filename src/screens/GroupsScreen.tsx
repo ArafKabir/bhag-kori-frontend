@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../context/AuthContext';
 import { fetchGroupsByUser, fetchUserBalanceByGroup, Group } from '../services/api';
 import {CustomText} from '../config/FontConfig';
+
+
 export default function GroupsScreen({ navigation }: { navigation: any }) {
   const { user } = useContext(AuthContext);
   const [groups, setGroups] = useState<Group[]>([]);

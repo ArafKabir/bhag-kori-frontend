@@ -8,6 +8,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen';
 import CreateGroupScreen from './screens/CreateGroupScreen.tsx';
 import GroupsScreen from './screens/GroupsScreen.tsx';
+import GroupsDetails from './screens/GroupDetails.tsx';
 import ComingSoonScreen from './screens/ComingSoonScreen.tsx';
 
 
@@ -28,6 +29,7 @@ function AppNavigator(){
       <Stack.Screen name="SignUp" component={SignUpScreen}/>
       <Stack.Screen name="CreateGroup" component={CreateGroupScreen}/>
       <Stack.Screen name="Groups" component={GroupsScreen}/>
+      <Stack.Screen name="GroupDetails" component={GroupsDetails}/>
       <Stack.Screen name="Friends" component={ComingSoonScreen}/>
       <Stack.Screen name="Request" component={ComingSoonScreen}/>
       <Stack.Screen name="AddFriend" component={ComingSoonScreen}/>
